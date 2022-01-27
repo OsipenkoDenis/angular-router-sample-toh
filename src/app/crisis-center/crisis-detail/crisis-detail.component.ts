@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Observable } from 'rxjs';
+
+import { Crisis } from '../crisis';
+import { DialogService } from '../../dialog.service';
 
 @Component({
   selector: 'app-crisis-detail',
@@ -7,13 +11,42 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./crisis-detail.component.css']
 })
 export class CrisisDetailComponent implements OnInit {
-  crisisId: any;
-  constructor(private router: Router,
-              private route: ActivatedRoute) { }
+  crisis!: Crisis;
+  editName = '';
 
-  ngOnInit(): void {
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    public dialogService: DialogService
+  ) {}
+
+  ngOnInit() {
+    this.route.data
+      .subscribe(data => {
+        const crisis: Crisis = data['crisis'];
+        this.editName = crisis.name;
+        this.crisis = crisis;
+      });
   }
-  gotoCrises(){
-  this.router.navigate(['../', { id: this.crisisId, foo: 'foo' }], { relativeTo: this.route });
+
+  cancel() {
+    this.gotoCrises();
+  }
+
+  save() {
+    this.crisis.name = this.editName;
+    this.gotoCrises();
+  }
+
+  canDeactivate(): Observable<boolean> | boolean {
+    if (!this.crisis || this.crisis.name === this.editName) {
+      return true;
+    }
+    return this.dialogService.confirm('Discard changes?');
+  }
+
+  gotoCrises() {
+    const crisisId = this.crisis ? this.crisis.id : null;
+    this.router.navigate(['../', { id: crisisId, foo: 'foo' }], { relativeTo: this.route });
   }
 }

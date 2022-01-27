@@ -3,13 +3,15 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { Router } from '@angular/router';
+
 import { AppComponent } from './app.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { ComposeMessageComponent } from './compose-message/compose-message.component';
+
 import { AppRoutingModule } from './app-routing.module';
 import { HeroesModule } from './heroes/heroes.module';
-
-import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
-import { CrisisCenterModule } from './crisis-center/crisis-center.module';
-import { ComposeMessageComponent } from './compose-message/compose-message.component';
+import { AuthModule } from './auth/auth.module';
 
 @NgModule({
   imports: [
@@ -17,14 +19,17 @@ import { ComposeMessageComponent } from './compose-message/compose-message.compo
     BrowserAnimationsModule,
     FormsModule,
     HeroesModule,
-    CrisisCenterModule,
-    AppRoutingModule
+    AuthModule,
+    AppRoutingModule,
   ],
   declarations: [
     AppComponent,
-    PageNotFoundComponent,
     ComposeMessageComponent,
+    PageNotFoundComponent
   ],
   bootstrap: [ AppComponent ]
 })
-export class AppModule { }
+export class AppModule {
+  constructor(router: Router) {
+  }
+}
